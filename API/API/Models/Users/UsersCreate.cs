@@ -12,4 +12,5 @@ public class UsersCreate
     
     [Required]
     public string Password  { get; set; } = string.Empty;
+    
 }

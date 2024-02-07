@@ -16,6 +16,5 @@ public class Users
     [Required]
     public string Password  { get; set; } = string.Empty;
     
-    [Required]
-    public char Role { get; set; } = '1';
+   public char Role { get; set; } = '1';
 }
