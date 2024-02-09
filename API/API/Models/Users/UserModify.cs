@@ -2,11 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.Models;
 
-public class Users
+public class UsersModify
 {
-    [Key]
-    public int Id { get; set; }
-    
     [Required]
     public string Email { get; set; } = string.Empty;
     
@@ -16,8 +13,6 @@ public class Users
     [Required]
     public string Password  { get; set; } = string.Empty;
     
-    [Required] 
     public char Role { get; set; } = '1';
     
-    public IList<Products> Posts { get; } = new List<Products>();
 }

@@ -1,5 +1,8 @@
+using System.Security.Claims;
 using API.Data;
 using API.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,17 +20,17 @@ public class UserController : Controller
         _context = context;
     }
 
-    /*
-    [HttpGet]
+    
+    [HttpGet("all") , Authorize(Roles = "1")]
     public async Task<ActionResult<List<Users>>> GetALlUsers()
     {
         var users = await _context.Users.ToListAsync();
         
         return Ok(users);
     }
-    */
     
-    [HttpGet("{id}")]
+    
+    [HttpGet("{id}"), Authorize]
     public async Task<ActionResult<Users>> GetUser(int id)
     {
         var user = await _context.Users.FindAsync(id);
@@ -39,19 +42,10 @@ public class UserController : Controller
         return Ok(user);
     }
     
-    [HttpPost]
-    public async Task<ActionResult<Users>> AddUser(Users user)
+    [HttpPut("{id}"), Authorize(Roles = "1")]
+    public async Task<ActionResult<Users>> UpdateUser(UsersModify updateUser,int id)
     {
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
-
-        return Ok(user);
-    }
-    
-    [HttpPut]
-    public async Task<ActionResult<Users>> UpdateHero(Users updateUser)
-    {
-        var dbUser = await _context.Users.FindAsync(updateUser.Id);
+        var dbUser = await _context.Users.FindAsync(id);
         if (dbUser is null)
         {
             return NotFound("User not found.");
@@ -64,10 +58,33 @@ public class UserController : Controller
         
         await _context.SaveChangesAsync();
 
-        return Ok(updateUser);
+        return Ok(new { Response = "User updated"});
     }
     
-    [HttpDelete("{id}")]
+    [HttpPut("me"), Authorize]
+    public async Task<ActionResult<string>> UpdateMe(UsersCreate updateUser)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        
+        var dbUser = await _context.Users.FindAsync(int.Parse(userId));
+        if (dbUser is null)
+        {
+            return NotFound("User not found.");
+        }
+        
+        string passwordHash = BCrypt.Net.BCrypt.HashPassword(dbUser.Password);
+        
+        dbUser.Email = updateUser.Email;
+        dbUser.Pseudo = updateUser.Pseudo;
+        dbUser.Password = passwordHash;
+        
+        await _context.SaveChangesAsync();
+
+        return Ok(new { Response = "User updated"});
+        
+    }
+    
+    [HttpDelete("{id}"), Authorize(Roles = "1")]
     public async Task<ActionResult<Users>> DeleteUser(int id)
     {
         var user = await _context.Users.FindAsync(id);
@@ -79,7 +96,23 @@ public class UserController : Controller
         _context.Users.Remove(user);
         await _context.SaveChangesAsync();
         
-        return Ok(user);
+        return Ok(new { Response = "User deleted"});
+    }
+    
+    [HttpDelete("me"), Authorize]
+    public async Task<ActionResult<Users>> DeleteMe(int id)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var user = await _context.Users.FindAsync(int.Parse(userId));
+        if (user is null)
+        {
+            return NotFound("User not found.");
+        }
+        
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
+        
+        return Ok(new { Response = "User deleted"});
     }
     
     
