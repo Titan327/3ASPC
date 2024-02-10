@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace API.Models;
 
@@ -19,5 +20,6 @@ public class Users
     [Required] 
     public char Role { get; set; } = '1';
     
-    public IList<Products> Posts { get; } = new List<Products>();
+    public IList<Products> Products { get; set; } = new List<Products>();
+    public IList<Carts> Carts { get; set; } = new List<Carts>();
 }

@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Org.BouncyCastle.X509;
 
 namespace API.Models;
 
@@ -21,8 +22,13 @@ public class Products
     public char Available  { get; set; } = '1';
     
     [Required]
+    public string Type { get; set; }
+    
+    [Required]
     public DateTime AddedTime  { get; set; } = DateTime.Now;
 
     public int UserId { get; set; }
     public Users User { get; set; }
+    
+    public IList<Carts> Carts { get; set; } = new List<Carts>();
 }

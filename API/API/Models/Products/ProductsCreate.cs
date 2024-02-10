@@ -13,4 +13,6 @@ public class ProductsCreate
     [Required]
     public float Price  { get; set; } = 0;
     
+    [Required]
+    public string Type { get; set; }
 }

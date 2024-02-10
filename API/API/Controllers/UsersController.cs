@@ -100,7 +100,7 @@ public class UserController : Controller
     }
     
     [HttpDelete("me"), Authorize]
-    public async Task<ActionResult<Users>> DeleteMe(int id)
+    public async Task<ActionResult<string>> DeleteMe(int id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var user = await _context.Users.FindAsync(int.Parse(userId));
