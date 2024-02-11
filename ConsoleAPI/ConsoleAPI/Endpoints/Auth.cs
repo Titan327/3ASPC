@@ -5,7 +5,7 @@ namespace ConsoleAPI.Endpoints;
 
 public class Auth
 {
-    public void register(string email = null,string pseudo = null,string password = null,string token = null)
+    public static void register(string email = null,string pseudo = null,string password = null,string token = null)
     {
         const string endpoint = "/Auth/register";
         
@@ -22,7 +22,7 @@ public class Auth
         
     }
     
-    public void login(string pseudo = null,string password = null,string token = null)
+    public static void login(string pseudo = null,string password = null,string token = null)
     {
         const string endpoint = "/Auth/login";
         
