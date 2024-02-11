@@ -28,7 +28,8 @@ public class Products
     public DateTime AddedTime  { get; set; } = DateTime.Now;
 
     public int UserId { get; set; }
+    [JsonIgnore]
     public Users User { get; set; }
-    
+    [JsonIgnore]
     public IList<Carts> Carts { get; set; } = new List<Carts>();
 }

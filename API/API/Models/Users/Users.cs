@@ -20,6 +20,8 @@ public class Users
     [Required] 
     public char Role { get; set; } = '1';
     
+    [JsonIgnore]
     public IList<Products> Products { get; set; } = new List<Products>();
+    [JsonIgnore]
     public IList<Carts> Carts { get; set; } = new List<Carts>();
 }

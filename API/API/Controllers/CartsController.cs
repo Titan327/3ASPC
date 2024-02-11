@@ -41,7 +41,7 @@ public class CartsController : Controller
     }
     
     [HttpPost, Authorize(Roles = "1,2,3")]
-    public async Task<ActionResult<string>> CreateProduct(int productId)
+    public async Task<ActionResult<string>> AddProductInCart(int productId)
     {
         
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -60,7 +60,7 @@ public class CartsController : Controller
     }
     
     [HttpDelete, Authorize(Roles = "1,2,3")]
-    public async Task<ActionResult<string>> DeleteProduct(int cartItemId)
+    public async Task<ActionResult<string>> DeleteProductInCart(int cartItemId)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var dbUser = await _context.Users.FindAsync(int.Parse(userId));

@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using API.Data;
 using API.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +20,7 @@ public class ProductsController : Controller
     }
 
     
-    [HttpGet("all"), Authorize(Roles = "1")]
+    [HttpGet("all")/*, Authorize(Roles = "1")*/]
     public async Task<ActionResult<List<Products>>> GetALlProducts()
     {
         var Products = await _context.Products.ToListAsync();
@@ -120,7 +119,6 @@ public class ProductsController : Controller
         {
             return NotFound(new { Response = "User not found."});
         }
-
         var product = await _context.Products.FindAsync(productId);
 
         if (product is null)
@@ -140,9 +138,6 @@ public class ProductsController : Controller
         await _context.SaveChangesAsync();
 
         return Ok(new { Response = "Product updated"});
-        
-        
-        
     }
     
     [HttpDelete, Authorize(Roles = "1,2")]
