@@ -5,14 +5,14 @@ namespace ConsoleAPI.Endpoints;
 
 public class Carts
 {
-    public static void getAllCarts(string token = null)
+    public static async Task getAllCarts(string token = null)
     {
         const string endpoint = "/carts/all";
 
-        Program.callApi(token,endpoint,null,"get",null);
+        await Program.callApi(token,endpoint,null,"get",null);
     }
     
-    public static void AddProductInCart(string id = "",string token = null)
+    public static async Task AddProductInCart(string id = "",string token = null)
     {
         const string endpoint = "/carts";
         
@@ -21,11 +21,11 @@ public class Carts
         Program.callApi(token,endpoint,null,"post",param);
     }
     
-    public static void deleteProductInCart(string id = null, string token = null)
+    public static async Task deleteProductInCart(string id = null, string token = null)
     {
         const string endpoint = "/carts";
         string param = "/?cartItemId=" + id;
         
-        Program.callApi(token,endpoint,null,"del",param);
+        await Program.callApi(token,endpoint,null,"del",param);
     }
 }

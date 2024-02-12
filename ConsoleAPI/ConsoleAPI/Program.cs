@@ -29,7 +29,8 @@ namespace ConsoleAPI
             
             Console.WriteLine("1. Crée un compte");
             Console.WriteLine("2. Se connecter");
-            Console.WriteLine("3. Passer");
+            Console.WriteLine("3. Utiliser un token");
+            Console.WriteLine("4. Passer");
 
             userInput = Console.ReadLine();
 
@@ -49,7 +50,7 @@ namespace ConsoleAPI
                     
                     await Auth.register(email,pseudo,password);
 
-                    authChoice();
+                    await authChoice();
                     
                     break;
                 
@@ -61,20 +62,25 @@ namespace ConsoleAPI
                     
                     await Auth.login(pseudo,password);
                     
+                    await authChoice();
+                    
                     break;
                 case "3":
+                    Console.WriteLine("Votre token (laisser vide si vous n'en avez pas)");
+                    token = Console.ReadLine();
+                    if (token == "")
+                    {
+                        token = null;
+                    }
+            
+                    endpointChoice();
+                    break;
+                case "4":
                     endpointChoice();
                     break;
             }
             
-            Console.WriteLine("Votre token (laisser vide si vous n'en avez pas)");
-            token = Console.ReadLine();
-            if (token == "")
-            {
-                token = null;
-            }
             
-            endpointChoice();
             
         }
 
@@ -104,7 +110,7 @@ namespace ConsoleAPI
             }
         }
         
-        public static void endpointCarts()
+        public static async Task endpointCarts()
         {
             string userInput;
             
@@ -124,17 +130,17 @@ namespace ConsoleAPI
             switch (userInput)
             {
                 case "1":
-                    Carts.getAllCarts(token);
+                    await Carts.getAllCarts(token);
                     break;
                 case "2":
                     Console.WriteLine("Id du produit a ajouter:");
                     id = Console.ReadLine();
-                    Carts.AddProductInCart(id,token);
+                    await Carts.AddProductInCart(id,token);
                     break;
                 case "3":
                     Console.WriteLine("Id du produit a supprimer:");
                     id = Console.ReadLine();
-                    Carts.deleteProductInCart(id,token);
+                    await Carts.deleteProductInCart(id,token);
                     break;
             }
         }
@@ -334,18 +340,6 @@ namespace ConsoleAPI
                     default:
                         throw new ArgumentException("Invalid HTTP type");
                 }
-                /*
-                if (response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine("find");
-                    string responseData = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine(responseData);
-                    
-                    endpointChoice();
-                    
-                }
-                */
-
                 
                 string responseData = await response.Content.ReadAsStringAsync();
                 

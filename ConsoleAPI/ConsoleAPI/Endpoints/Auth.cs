@@ -18,13 +18,12 @@ public class Auth
         
         string body = JsonSerializer.Serialize(user);
         
-        Program.callApi(token,endpoint,body,"post",null);
+        await Program.callApi(token,endpoint,body,"post",null);
         
     }
     
     public static async Task login(string pseudo = null,string password = null,string token = null)
     {
-        Console.WriteLine("testt");
         const string endpoint = "/Auth/login";
         
         UsersLogin user = new UsersLogin
