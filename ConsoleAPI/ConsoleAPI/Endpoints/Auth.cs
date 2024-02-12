@@ -5,7 +5,7 @@ namespace ConsoleAPI.Endpoints;
 
 public class Auth
 {
-    public static void register(string email = null,string pseudo = null,string password = null,string token = null)
+    public static async Task register(string email = null,string pseudo = null,string password = null,string token = null)
     {
         const string endpoint = "/Auth/register";
         
@@ -22,8 +22,9 @@ public class Auth
         
     }
     
-    public static void login(string pseudo = null,string password = null,string token = null)
+    public static async Task login(string pseudo = null,string password = null,string token = null)
     {
+        Console.WriteLine("testt");
         const string endpoint = "/Auth/login";
         
         UsersLogin user = new UsersLogin
@@ -34,7 +35,7 @@ public class Auth
         
         string body = JsonSerializer.Serialize(user);
         
-        Program.callApi(token,endpoint,body,"post",null);
+        await Program.callApi(token,endpoint,body,"post",null);
         
     }
 }

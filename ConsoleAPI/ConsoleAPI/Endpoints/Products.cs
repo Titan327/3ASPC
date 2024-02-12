@@ -5,14 +5,14 @@ namespace ConsoleAPI.Endpoints;
 
 public class Products
 {
-    public static void getAllUsers(string token = null)
+    public static void getAllProduct(string token = null)
     {
         const string endpoint = "/products/all";
 
         Program.callApi(token,endpoint,null,"get",null);
     }
     
-    public static void getUser(string id = "",string token = null,string typeFilter = null,string sortBy = null,string orderBy = null,string limit = null)
+    public static void getProduct(string id = "",string token = null,string typeFilter = null,string sortBy = null,string orderBy = null,string limit = null)
     {
         const string endpoint = "/products";
 

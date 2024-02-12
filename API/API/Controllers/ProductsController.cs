@@ -20,7 +20,7 @@ public class ProductsController : Controller
     }
 
     
-    [HttpGet("all")/*, Authorize(Roles = "1")*/]
+    [HttpGet("all"), Authorize(Roles = "1")]
     public async Task<ActionResult<List<Products>>> GetALlProducts()
     {
         var Products = await _context.Products.ToListAsync();
@@ -140,7 +140,7 @@ public class ProductsController : Controller
         return Ok(new { Response = "Product updated"});
     }
     
-    [HttpDelete, Authorize(Roles = "1,2")]
+    [HttpDelete("{id}"), Authorize(Roles = "1,2")]
     public async Task<ActionResult<string>> DeleteProduct(int id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
