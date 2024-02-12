@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace API.Models;
 
-public class Users
+public class UsersInfo
 {
     [Key]
     public int Id { get; set; }
@@ -14,14 +14,7 @@ public class Users
     [Required] 
     public string Pseudo { get; set; } = string.Empty;
     
-    [Required]
-    public string Password  { get; set; } = string.Empty;
-    
     [Required] 
-    public char Role { get; set; } = '3';
+    public char Role { get; set; }
     
-    [JsonIgnore]
-    public IList<Products> Products { get; set; } = new List<Products>();
-    [JsonIgnore]
-    public IList<Carts> Carts { get; set; } = new List<Carts>();
 }

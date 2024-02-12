@@ -34,7 +34,7 @@ public class AuthController : Controller
             Email = userCreated.Email,
             Pseudo = userCreated.Pseudo,
             Password = passwordHash,
-            Role = '1'
+            Role = '3'
         };
         
         _context.Users.Add(newUser);

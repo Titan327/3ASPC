@@ -28,8 +28,8 @@ public class ProductsController : Controller
         return Ok(Products);
     }
 
-    [HttpGet]
-    public async Task<ActionResult<List<Products>>> GetProducts(string typeFilter,string sortBy, string orderBy, int limit = 10)
+    [HttpGet("filter")]
+    public async Task<ActionResult<List<Products>>> GetProducts([FromQuery] string typeFilter,[FromQuery] string sortBy, [FromQuery] string orderBy, [FromQuery] int limit = 10)
     {
         switch (sortBy.ToLower())
         {
@@ -66,8 +66,8 @@ public class ProductsController : Controller
         return Ok(await _context.Products.Take(limit).ToListAsync());
     }
     
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Products>> GetProduct(int id)
+    [HttpGet]
+    public async Task<ActionResult<Products>> GetProduct([FromQuery] int id)
     {
         var product = await _context.Products.FindAsync(id);
         if (product is null)
@@ -77,8 +77,8 @@ public class ProductsController : Controller
         return Ok(product);
     }
     
-    [HttpGet("{search}")]
-    public async Task<ActionResult<Products>> SearchProduct(string search)
+    [HttpGet("search")]
+    public async Task<ActionResult<Products>> SearchProduct([FromQuery] string search)
     {
         var product = await _context.Products.Where(products => products.Name.Contains(search)).ToListAsync();
         if (product is null)
@@ -100,6 +100,7 @@ public class ProductsController : Controller
             Name = productCreated.Name,
             Image = productCreated.Image,
             Price = productCreated.Price,
+            Type = productCreated.Type,
             UserId = user.Id
         };
         
@@ -110,7 +111,7 @@ public class ProductsController : Controller
     }
     
     [HttpPut, Authorize(Roles = "1,2")]
-    public async Task<ActionResult<string>> UpdateProduct(ProductsCreate updateProduct,int productId)
+    public async Task<ActionResult<string>> UpdateProduct(ProductsCreate updateProduct,[FromQuery] int productId)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var dbUser = await _context.Users.FindAsync(int.Parse(userId));
@@ -140,8 +141,8 @@ public class ProductsController : Controller
         return Ok(new { Response = "Product updated"});
     }
     
-    [HttpDelete("{id}"), Authorize(Roles = "1,2")]
-    public async Task<ActionResult<string>> DeleteProduct(int id)
+    [HttpDelete, Authorize(Roles = "1,2")]
+    public async Task<ActionResult<string>> DeleteProduct([FromQuery] int id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var dbUser = await _context.Users.FindAsync(int.Parse(userId));

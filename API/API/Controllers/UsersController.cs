@@ -30,20 +30,28 @@ public class UserController : Controller
     }
     
     
-    [HttpGet("{id}"), Authorize]
-    public async Task<ActionResult<Users>> GetUser(int id)
+    [HttpGet]
+    public async Task<ActionResult<UsersInfo>> GetUser([FromQuery] int id)
     {
         var user = await _context.Users.FindAsync(id);
         if (user is null)
         {
             return NotFound("User not found.");
         }
+
+        var usersInfo = new UsersInfo
+        {
+            Id = user.Id,
+            Email = user.Email,
+            Pseudo = user.Pseudo,
+            Role = user.Role
+        };
         
-        return Ok(user);
+        return Ok(usersInfo);
     }
     
-    [HttpPut("{id}"), Authorize(Roles = "1")]
-    public async Task<ActionResult<Users>> UpdateUser(UsersModify updateUser,int id)
+    [HttpPut, Authorize(Roles = "1")]
+    public async Task<ActionResult<Users>> UpdateUser(UsersModify updateUser,[FromQuery] int id)
     {
         var dbUser = await _context.Users.FindAsync(id);
         if (dbUser is null)
@@ -84,8 +92,8 @@ public class UserController : Controller
         
     }
     
-    [HttpDelete("{id}"), Authorize(Roles = "1")]
-    public async Task<ActionResult<Users>> DeleteUser(int id)
+    [HttpDelete, Authorize(Roles = "1")]
+    public async Task<ActionResult<Users>> DeleteUser([FromQuery] int id)
     {
         var user = await _context.Users.FindAsync(id);
         if (user is null)

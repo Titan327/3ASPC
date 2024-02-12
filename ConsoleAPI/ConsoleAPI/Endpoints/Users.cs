@@ -16,7 +16,7 @@ public class Users
     {
         const string endpoint = "/user";
         
-        string param = "/?id=" + id;
+        string param = "?id=" + id;
         
         await Program.callApi(token,endpoint,null,"get",param);
     }

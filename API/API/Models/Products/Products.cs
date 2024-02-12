@@ -20,9 +20,8 @@ public class Products
     
     [Required]
     public char Available  { get; set; } = '1';
-    
-    [Required]
-    public string Type { get; set; }
+
+    [Required] public string Type { get; set; } = "none";
     
     [Required]
     public DateTime AddedTime  { get; set; } = DateTime.Now;

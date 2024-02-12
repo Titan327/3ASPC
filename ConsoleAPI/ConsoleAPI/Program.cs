@@ -3,6 +3,8 @@ using System.Text;
 using API.Models;
 using ConsoleAPI.Endpoints;
 using DotNetEnv;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Carts = ConsoleAPI.Endpoints.Carts;
 using Users = ConsoleAPI.Endpoints.Users;
 using Products = ConsoleAPI.Endpoints.Products;
@@ -11,17 +13,18 @@ namespace ConsoleAPI
 {
     public class Program
     {
-        private static string token;
+        private static string token = @"eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50a\nXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiVGl0YW4zMjciLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZ\nnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiIxIiwiZXhwIjoxNzA4MzcwMDM1fQ.eGpH81YNHyGGkTm3azV2mwkKny7pEmNDf6b5vtFOkw5HoccvaBk30e2j2W07MEMzS8NPI2aUAZq-8LmNSNC7Iw";
         static async Task Main()
         {
             
             Console.WriteLine("\n ___________  _____   __                    \n|_   _| ___ \\/ _ \\ \\ / /                    \n  | | | |_/ / /_\\ \\ V /    __ _ _ __  _ __  \n  | | | ___ \\  _  |\\ /    / _` | '_ \\| '_ \\ \n _| |_| |_/ / | | || |   | (_| | |_) | |_) |\n \\___/\\____/\\_| |_/\\_/    \\__,_| .__/| .__/ \n                               | |   | |    \n                               |_|   |_|    \n");
             
             await authChoice();
+            
+            Console.WriteLine("End");
 
         }
-
-
+        
 
         public static async Task authChoice()
         {
@@ -29,8 +32,7 @@ namespace ConsoleAPI
             
             Console.WriteLine("1. Crée un compte");
             Console.WriteLine("2. Se connecter");
-            Console.WriteLine("3. Utiliser un token");
-            Console.WriteLine("4. Passer");
+            Console.WriteLine("3. Passer");
 
             userInput = Console.ReadLine();
 
@@ -66,17 +68,7 @@ namespace ConsoleAPI
                     
                     break;
                 case "3":
-                    Console.WriteLine("Votre token (laisser vide si vous n'en avez pas)");
-                    token = Console.ReadLine();
-                    if (token == "")
-                    {
-                        token = null;
-                    }
-            
-                    endpointChoice();
-                    break;
-                case "4":
-                    endpointChoice();
+                    await endpointChoice();
                     break;
             }
             
@@ -85,7 +77,7 @@ namespace ConsoleAPI
         }
 
 
-        public static void endpointChoice()
+        public static async Task endpointChoice()
         {
             string userInput;
             
@@ -99,13 +91,13 @@ namespace ConsoleAPI
             switch (userInput)
             {
                 case "1":
-                    endpointProducts();
+                    await endpointProducts();
                     break;
                 case "2":
-                    endpointUsers();
+                    await endpointUsers();
                     break;
                 case "3":
-                    endpointCarts();
+                    await endpointCarts();
                     break;
             }
         }
@@ -114,7 +106,7 @@ namespace ConsoleAPI
         {
             string userInput;
             
-            Console.WriteLine("Quel endpoint utiliser ?");
+            Console.WriteLine("Quel route utiliser ?");
             Console.WriteLine("1. get all");
             Console.WriteLine("2. add item in cart");
             Console.WriteLine("3. delete item");
@@ -131,25 +123,28 @@ namespace ConsoleAPI
             {
                 case "1":
                     await Carts.getAllCarts(token);
+                    await endpointChoice();
                     break;
                 case "2":
                     Console.WriteLine("Id du produit a ajouter:");
                     id = Console.ReadLine();
                     await Carts.AddProductInCart(id,token);
+                    await endpointChoice();
                     break;
                 case "3":
                     Console.WriteLine("Id du produit a supprimer:");
                     id = Console.ReadLine();
                     await Carts.deleteProductInCart(id,token);
+                    await endpointChoice();
                     break;
             }
         }
 
-        public static void endpointProducts()
+        public static async Task endpointProducts()
         {
             string userInput;
             
-            Console.WriteLine("Quel endpoint utiliser ?");
+            Console.WriteLine("Quel route utiliser ?");
             Console.WriteLine("1. get all");
             Console.WriteLine("2. get by id");
             Console.WriteLine("3. get with filter");
@@ -178,12 +173,14 @@ namespace ConsoleAPI
             switch (userInput)
             {
                 case "1":
-                    Products.getProduct(token);
+                    await Products.getProduct(token);
+                    await endpointChoice();
                     break;
                 case "2":
                     Console.WriteLine("id de l'user voulu:");
                     id = Console.ReadLine();
-                    Products.getProductById(id,token);
+                    await Products.getProductById(id,token);
+                    await endpointChoice();
                     break;
                 case "3":
                     Console.WriteLine("Laisser vide les champ non voulu");
@@ -196,13 +193,15 @@ namespace ConsoleAPI
                     Console.WriteLine("limit:");
                     limit = Console.ReadLine();
                     
-                    Products.getProduct(id,token,type,sortBy,orderBy,limit);
+                    await Products.getProduct(id,token,type,sortBy,orderBy,limit);
+                    await endpointChoice();
                     break;
                 case "4":
                     Console.WriteLine("search:");
                     search = Console.ReadLine();
                     
-                    Products.getProductSearch(search,token);
+                    await Products.getProductSearch(search,token);
+                    await endpointChoice();
                     break;
                 case "5":
                     Console.WriteLine("name:");
@@ -214,7 +213,8 @@ namespace ConsoleAPI
                     Console.WriteLine("type:");
                     type = Console.ReadLine();
                     
-                    Products.createProduct(pseudo,image,price,type,type);
+                    await Products.createProduct(pseudo,image,price,type,type);
+                    await endpointChoice();
                     break;
                 case "6":
                     Console.WriteLine("id de l'user a modifier:");
@@ -229,21 +229,23 @@ namespace ConsoleAPI
                     Console.WriteLine("type:");
                     type = Console.ReadLine();
                     
-                    Products.putProduct(price,id,pseudo,image,type,token);
+                    await Products.putProduct(price,id,pseudo,image,type,token);
+                    await endpointChoice();
                     break;
                 case "7":
                     Console.WriteLine("id de l'user voulu:");
                     id = Console.ReadLine();
-                    Products.deleteProduct(id,token);
+                    await Products.deleteProduct(id,token);
+                    await endpointChoice();
                     break;
             }
         }
 
-        public static void endpointUsers()
+        public static async Task endpointUsers()
         {
             string userInput;
             
-            Console.WriteLine("Quel endpoint utiliser ?");
+            Console.WriteLine("Quel route utiliser ?");
             Console.WriteLine("1. get all");
             Console.WriteLine("2. get by id");
             Console.WriteLine("3. change user by id");
@@ -262,12 +264,14 @@ namespace ConsoleAPI
             switch (userInput)
             {
                 case "1":
-                    Users.getAllUsers(token);
+                    await Users.getAllUsers(token);
+                    await endpointChoice();
                     break;
                 case "2":
                     Console.WriteLine("id de l'user voulu:");
                     id = Console.ReadLine();
-                    Users.getUser(id,token);
+                    await Users.getUser(id,token);
+                    await endpointChoice();
                     break;
                 case "3":
                     Console.WriteLine("Id de l'utilisateur a modifier:");
@@ -280,7 +284,8 @@ namespace ConsoleAPI
                     pseudo = Console.ReadLine();
                     Console.WriteLine("Password:");
                     password = Console.ReadLine();
-                    Users.putUser(role, id, token, email, pseudo, password);
+                    await Users.putUser(role, id, token, email, pseudo, password);
+                    await endpointChoice();
                     break;
                 case "4":
                     Console.WriteLine("Pseudo:");
@@ -289,29 +294,33 @@ namespace ConsoleAPI
                     pseudo = Console.ReadLine();
                     Console.WriteLine("Password:");
                     password = Console.ReadLine();
-                    Users.putMe(token, email, pseudo, password);
+                    await Users.putMe(token, email, pseudo, password);
+                    await endpointChoice();
                     break;
                 case "5":
                     Console.WriteLine("id de l'user voulu:");
                     id = Console.ReadLine();
-                    Users.deleteUser(id,token);
+                    await Users.deleteUser(id,token);
+                    await endpointChoice();
                     break;
                 case "6":
-                    Users.deleteUser(token);
+                    await Users.deleteUser(token);
+                    await endpointChoice();
                     break;
             }
         }
         
-
         public static async Task callApi(string token,string endpoint,string body,string httpType,string param)
         {
+            
             string apiUrl = "http://localhost:5229/api" + endpoint + param;
-
-            using (var client = new HttpClient())
+            
+            //using (var client = new HttpClient())
+            using (HttpClient client = new HttpClient())
             {
                 if (token != null)
                 {
-                    client.DefaultRequestHeaders.Authorization =
+                    client.DefaultRequestHeaders.Authorization = 
                         new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 }
 
@@ -320,8 +329,10 @@ namespace ConsoleAPI
                 {
                     content = new StringContent(body, Encoding.UTF8, "application/json");
                 }
-                
-                HttpResponseMessage response = null;
+                Console.WriteLine(body);
+                Console.WriteLine(content);
+                //HttpResponseMessage response = null;
+                HttpResponseMessage response;
                 
                 switch (httpType)
                 {
@@ -345,9 +356,11 @@ namespace ConsoleAPI
                 
                 Console.WriteLine(response.StatusCode);
                 Console.WriteLine(responseData);
-
-
+                
+                
             }
         }
+        
     }
+    
 }
